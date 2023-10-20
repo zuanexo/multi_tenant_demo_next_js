@@ -17,7 +17,7 @@ export default function Page({ params }: Props) {
   const [time, setTime] = useState(
     formatTimeAMPM(new Date("Fri Oct 20 2023 10:10:00"))
   );
-  const themeClass = useMemo(() => getThemeClass(params.theme), [params.theme]);
+  const themeClass = getThemeClass(params.theme);
 
   useEffect(() => {
     setInterval(() => {
