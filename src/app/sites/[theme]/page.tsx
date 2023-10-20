@@ -52,7 +52,7 @@ export default function Page({ params }: Props) {
             return null;
           return (
             <a
-              href={`http://${val}.localhost:3000`}
+              href={`http://${val}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`}
               key={val}
               className={val}
             ></a>
