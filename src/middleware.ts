@@ -15,7 +15,7 @@ export default async function middleware(req: NextRequest) {
     if (url.pathname.startsWith(`/sites`)) {
         url.pathname = `/404`
     } else if (!url.pathname.startsWith(`/api`)) {
-        url.pathname = currentHost ? `/sites/${currentHost}${url.pathname}` : '/sites/dark'
+        url.pathname = currentHost ? `/sites/${currentHost}${url.pathname}` : '/sites/default'
     }
 
     return NextResponse.rewrite(url)

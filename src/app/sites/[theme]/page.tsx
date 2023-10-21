@@ -28,12 +28,14 @@ const getThemeData = cache(async (slug: string) => {
   try {
     let theme;
 
-    theme = await prisma.theme.findUnique({
-      where: {
-        name: slug.toLowerCase(),
-        deleted: false,
-      },
-    });
+    if (slug !== "default") {
+      theme = await prisma.theme.findUnique({
+        where: {
+          name: slug.toLowerCase(),
+          deleted: false,
+        },
+      });
+    }
 
     if (!theme) {
       theme = await prisma.theme.findFirst({ where: { defaultTheme: true } });
