@@ -44,6 +44,11 @@ export async function POST(request: Request) {
                     break
                 }
 
+                if (data.name.length > 10) {
+                    validation = { isValid: false, message: "10 characters max in name" }
+                    break
+                }
+
                 const existingTheme = await prisma.theme.findUnique({ where: { name: data.name.toLowerCase() } })
 
                 if (existingTheme) {

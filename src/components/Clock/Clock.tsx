@@ -19,8 +19,20 @@ export default function Clock({ params, themeData }: Props) {
   const [time, setTime] = useState(
     formatTimeAMPM(new Date("Fri Oct 20 2023 10:10:00"))
   );
-  const [theme, setTheme] = useState({ ...themeData, name: params.theme });
-  const [createNew, setCreateNew] = useState(!themeData.editable);
+  const [theme, setTheme] = useState({
+    ...themeData,
+    name:
+      params.theme !== "default"
+        ? params.theme
+            .replace(/[^a-zA-Z0-9]/g, "")
+            .toLowerCase()
+            .slice(0, 10)
+        : "",
+  });
+
+  const [createNew, setCreateNew] = useState(
+    !themeData.editable || !themeData.name
+  );
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -176,7 +188,7 @@ export default function Clock({ params, themeData }: Props) {
       <div className={`editor`}>
         <div className="editorContent">
           <h2>Customize Themes</h2>
-          {themeData.editable && (
+          {themeData.editable && themeData.name && (
             <label className="label">
               Create New:
               <input
@@ -191,11 +203,14 @@ export default function Clock({ params, themeData }: Props) {
               Name:
               <input
                 type="text"
-                value={theme.name}
+                value={theme.name.toLowerCase()}
                 onChange={(e) =>
                   handleThemeChange(
                     "name",
-                    e.target.value.replace(/[^a-zA-Z0-9]/g, "").toLowerCase()
+                    e.target.value
+                      .replace(/[^a-zA-Z0-9]/g, "")
+                      .toLowerCase()
+                      .slice(0, 10)
                   )
                 }
               />
