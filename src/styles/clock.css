@@ -1,20 +1,20 @@
 .darkTheme {
-  --bg-color: black;
+  --bg-color: #000000;
   --bg-color2: #0c0d24;
-  --clock-shadow: #1600b0 2px 2px 10px 0px;
+  --clock-shadow: #1600b0;
   --clock-bezel-color: #141414;
-  --clock-bezel-border: 1px solid #ffffff;
+  --clock-bezel-border: #ffffff;
   --clock-face-color: #171720;
-  --clock-face-shadow: inset 0px 0px 5px 0px rgb(253, 253, 253);
-  --clock-face-border: 1px solid #ffffff;
+  --clock-face-shadow: #fdfdfd;
+  --clock-face-border: #ffffff;
   --sec-color: #ffffff;
-  --sec-shadow: 0px 0px 8px 0px rgb(255, 255, 255);
+  --sec-shadow: #ffffff;
   --min-color: #ffffff;
-  --min-border: 1px solid black;
-  --min-shadow: 0px 0px 8px 0px rgb(255, 255, 255);
+  --min-border: #000000;
+  --min-shadow: #ffffff;
   --hr-color: #ffffff;
-  --hr-border: 1px solid black;
-  --hr-shadow: 0px 0px 8px 0px rgb(255, 255, 255);
+  --hr-border: #000000;
+  --hr-shadow: #ffffff;
   --text-color: #ffffff;
   --text-shadow: #ffffff;
 }
@@ -89,8 +89,8 @@
   background-image: linear-gradient(var(--bg-color2) 1px, transparent 1px),
     linear-gradient(to right, var(--bg-color2) 1px, var(--bg-color) 1px);
   background-size: 20px 20px;
-  padding-block: 5vmax;
-  padding-inline: 10vmax;
+  padding-block: 5vh;
+  padding-inline: 10vw;
   flex-direction: column;
   align-items: center;
 }
@@ -100,22 +100,22 @@
   height: auto;
   aspect-ratio: 1;
   background-color: var(--clock-bezel-color);
-  border: var(--clock-bezel-border);
+  border: 1px solid var(--clock-bezel-border);
   border-radius: 50%;
   max-width: 450px;
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
-  box-shadow: var(--clock-shadow);
+  box-shadow: var(--clock-shadow) 2px 2px 10px 0px;
 }
 
 .face {
   width: 90%;
   height: 90%;
-  border: var(--clock-face-border);
+  border: 1px solid var(--clock-face-border);
   background-color: var(--clock-face-color);
-  box-shadow: var(--clock-face-shadow);
+  box-shadow: inset 0px 0px 5px 0px var(--clock-face-shadow);
   border-radius: 50%;
   position: relative;
 }
@@ -131,8 +131,8 @@
   bottom: 0;
   right: 0;
   background: var(--hr-color);
-  border: var(--hr-border);
-  box-shadow: var(--hr-shadow);
+  border: 1px solid var(--hr-border);
+  box-shadow: 0px 0px 8px 0px var(--hr-shadow);
   transform-origin: bottom center;
   transform: rotate(0deg);
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.4);
@@ -145,8 +145,9 @@
   width: 4px;
   top: -35%;
   left: 0;
-  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.4);
+  box-shadow: 0px 0px 8px 0px var(--min-shadow);
   transform: rotate(90deg);
+  border: 1px solid var(--min-border);
 }
 
 .second {
@@ -159,7 +160,8 @@
   bottom: 0;
   right: 0;
   border-radius: 4px;
-  background: #ff4b3e;
+  background: var(--sec-color);
+  box-shadow: 0px 0px 8px 0px var(--sec-shadow);
   transform-origin: bottom center;
   transform: rotate(180deg);
   z-index: 1;
@@ -222,5 +224,88 @@
     max-width: 100px;
     aspect-ratio: 1;
     border-radius: 50%;
+  }
+}
+
+.editor {
+  color: var(--text-color);
+  text-shadow: 0 0 5px var(--text-shadow);
+  width: 100%;
+  max-width: 350px;
+  padding: 24px;
+  background-color: #3a3a3a33;
+  border-radius: 15px;
+  margin-top: 32px;
+
+  .editorContent {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+
+    .label {
+      align-self: stretch;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 8px;
+    }
+
+    h2 {
+      margin-bottom: 24px;
+    }
+    input[type="checkbox"] {
+      appearance: none;
+      background-color: #fff;
+      margin: 0;
+      font: inherit;
+      color: var(--text-color);
+      width: 1.15em;
+      height: 1.15em;
+      border: 0.15em solid var(--text-color);
+      border-radius: 0.15em;
+      transform: translateY(-0.075em);
+      display: grid;
+      place-content: center;
+    }
+
+    input[type="checkbox"]::before {
+      content: "";
+      width: 0.65em;
+      height: 0.65em;
+      transform: scale(0);
+      transition: 120ms transform ease-in-out;
+      box-shadow: inset 1em 1em black;
+      transform-origin: bottom left;
+      clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+    }
+
+    input[type="checkbox"]:checked::before {
+      transform: scale(1);
+    }
+
+    input[type="color"] {
+      background-color: transparent;
+      cursor: pointer;
+      border: none;
+    }
+  }
+
+  .submit {
+    border: 1px solid var(--bg-color2);
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    text-shadow: 0 0 5px var(--text-shadow);
+    padding: 8px 16px;
+    cursor: pointer;
+    align-self: center;
+    font-size: 22px;
+    box-shadow: 0px 0px 8px 0px var(--text-shadow);
+    margin-top: 16px;
+  }
+
+  .submit:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
   }
 }

@@ -1,0 +1,36 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model Theme {
+  id          String  @id @db.ObjectId  @map("_id") @default(auto())
+  name        String    @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  bgColor      String @default("#000000") 
+  bgColor2     String @default("#0c0d24") 
+  clockShadow  String @default("#1600b0") 
+  clockBezelColor  String @default("#141414") 
+  clockBezelBorder  String @default("#ffffff") 
+  clockFaceColor  String @default("#171720") 
+  clockFaceShadow  String @default("#fdfdfd") 
+  clockFaceBorder  String @default("#ffffff") 
+  secColor    String @default("#ffffff") 
+  secShadow   String @default("#ffffff") 
+  minColor    String @default("#ffffff") 
+  minBorder   String @default("#000000") 
+  minShadow   String @default("#ffffff") 
+  hrColor     String @default("#ffffff") 
+  hrBorder    String @default("#000000") 
+  hrShadow    String @default("#ffffff") 
+  textColor   String @default("#ffffff") 
+  textShadow  String @default("#ffffff")
+  deleted     Boolean @default(false)
+  editable    Boolean @default(false)
+  defaultTheme Boolean @default(false)
+}

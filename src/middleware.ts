@@ -14,7 +14,7 @@ export default async function middleware(req: NextRequest) {
             : hostname?.includes(".localhost:3000") ? hostname.replace(`.localhost:3000`, "") : "";
     if (url.pathname.startsWith(`/sites`)) {
         url.pathname = `/404`
-    } else {
+    } else if (!url.pathname.startsWith(`/api`)) {
         url.pathname = currentHost ? `/sites/${currentHost}${url.pathname}` : '/sites/dark'
     }
 

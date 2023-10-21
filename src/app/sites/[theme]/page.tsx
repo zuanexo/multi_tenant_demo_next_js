@@ -1,64 +1,60 @@
-"use client";
-import React, { useEffect, useMemo, useState } from "react";
-import "./page.css";
-import getThemeClass from "@/lib/getThemeClass";
-import calculateRotation from "@/lib/calculateRotation";
-import formatTimeAMPM from "@/lib/formatTime";
-import { validThemes } from "@/lib/Constants";
+import Clock from "@/components/Clock/Clock";
+import { defaultTheme } from "@/lib/Constants";
+import prisma from "@/lib/prisma";
+import React, { cache } from "react";
 
 type Props = {
   params: { theme: string };
-  searchParams: { [key: string]: string | string[] | undefined };
 };
-export default function Page({ params }: Props) {
-  const [rotation, setRotation] = useState(
-    calculateRotation(new Date("Fri Oct 20 2023 10:10:00"))
-  );
-  const [time, setTime] = useState(
-    formatTimeAMPM(new Date("Fri Oct 20 2023 10:10:00"))
-  );
-  const themeClass = getThemeClass(params.theme);
 
-  useEffect(() => {
-    setInterval(() => {
-      setTime(formatTimeAMPM());
-      setRotation(calculateRotation());
-    }, 1000);
-  }, []);
+export const revalidate = 3600;
 
-  return (
-    <div className={"container " + themeClass}>
-      <div className="clock">
-        <div className="face">
-          <span
-            style={{ transform: `rotate(${rotation.hours}deg)` }}
-            className="hour"
-          ></span>
-          <span
-            style={{ transform: `rotate(${rotation.minutes}deg)` }}
-            className="minute"
-          ></span>
-          <span
-            style={{ transform: `rotate(${rotation.seconds}deg)` }}
-            className="second"
-          ></span>
-          <span className="center"></span>
-        </div>
-      </div>
-      <div className="digital">{time}</div>
-      <div className="otherThemes">
-        {Object.keys(validThemes).map((val) => {
-          if (validThemes[val as keyof typeof validThemes] == themeClass)
-            return null;
-          return (
-            <a
-              href={`http://${val}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`}
-              key={val}
-              className={val}
-            ></a>
-          );
-        })}
-      </div>
-    </div>
-  );
+export const generateMetadata = cache(
+  async ({ params }: { params: { theme: string } }) => {
+    let theme = await prisma.theme.findUnique({
+      where: { name: params.theme.toLowerCase() },
+      select: { name: true },
+    });
+    return {
+      title: `Clock${
+        theme ? ` | ${theme.name[0].toUpperCase() + theme.name.slice(1)} ` : ""
+      }`,
+      description: "Multi-tenant demo",
+    };
+  }
+);
+
+const getThemeData = cache(async (slug: string) => {
+  try {
+    let theme;
+
+    theme = await prisma.theme.findUnique({
+      where: {
+        name: slug.toLowerCase(),
+        deleted: false,
+      },
+    });
+
+    if (!theme) {
+      theme = await prisma.theme.findFirst({ where: { defaultTheme: true } });
+      theme = theme && { ...theme, name: "", editable: true };
+    }
+
+    if (!theme) {
+      theme = defaultTheme;
+    }
+
+    return theme;
+  } catch (error) {
+    console.log({ themeFetchingError: error });
+    return defaultTheme;
+  }
+});
+
+async function Page({ params }: Props) {
+  const themeData = await getThemeData(params.theme);
+
+  return <Clock themeData={themeData} params={params} />;
 }
+
+export default Page;
